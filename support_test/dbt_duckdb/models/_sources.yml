@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: nova
+    schema: main
+    tables:
+      - name: vehicles
+        meta: {external_location: "../data/nova/vehicles.csv", external_options: {header: true, all_varchar: true}}
+      - name: status_events
+        meta: {external_location: "../data/nova/status_events.csv", external_options: {header: true, all_varchar: true}}
+      - name: points_of_sale
+        meta: {external_location: "../data/nova/points_of_sale.csv", external_options: {header: true, all_varchar: true}}
+  - name: legacy
+    schema: main
+    tables:
+      - name: parc
+        meta: {external_location: "../data/legacy/parc.csv", external_options: {header: true, all_varchar: true}}
+      - name: statuts
+        meta: {external_location: "../data/legacy/statuts.csv", external_options: {header: true, all_varchar: true}}
+      - name: concessions
+        meta: {external_location: "../data/legacy/concessions.csv", external_options: {header: true, all_varchar: true}}
+  - name: ref
+    schema: main
+    tables:
+      - name: reseaux
+        meta: {external_location: "../data/reseaux.csv", external_options: {header: true, all_varchar: true}}

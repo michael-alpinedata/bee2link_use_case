@@ -1,0 +1,23 @@
+i_statut,i_veh_configuration,s_libelle
+100,1,PRÉ-RENTRÉE
+101,1,Entrée physique
+102,1,Préparation
+103,1,Stock de vente
+104,1,En livraison
+106,1,Livraison différée
+105,1,Sortie
+200,2,Entrée physique
+201,2,Préparation
+202,2,Stock de vente
+203,2,En livraison
+204,2,Sortie
+300,0,Commande usine
+301,0,Stock de vente
+302,0,Entrée physique
+303,0,En livraison
+304,0,Sortie
+300,3,Commande usine
+301,3,Stock de vente
+302,3,Entrée physique
+303,3,En livraison
+304,3,Sortie

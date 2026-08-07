@@ -1,0 +1,8 @@
+source_system,pos_id,reseau
+nova,POS1,nord
+nova,POS2,nord
+nova,POS3,sud
+nova,POS4,sud
+legacy,PVE1,nord
+legacy,PVE2,nord
+legacy,PVE9,sud

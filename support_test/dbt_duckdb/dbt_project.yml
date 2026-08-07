@@ -1,0 +1,10 @@
+name: 'reconciliation_sandbox'
+version: '1.0'
+config-version: 2
+profile: 'sandbox'
+
+model-paths: ["models"]
+
+models:
+  reconciliation_sandbox:
+    +materialized: view

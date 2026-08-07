@@ -1,0 +1,7 @@
+sandbox:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: sandbox.duckdb
+      threads: 4
