@@ -11,6 +11,11 @@ wheels/
 
 
 # dbt
-target/*
-**/.user.yml
+dbt_duckdb/target/*
+dbt_duckdb/logs/*
+dbt_duckdb/.user.yml
 
+dbt_duckdb/sandbox.duckdb
+
+sandbox.duckdb
+logs/dbt.log

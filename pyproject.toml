@@ -1,7 +1,7 @@
 [project]
-name = "candidat"
+name = "bee2link_use_case"
 version = "0.1.0"
-description = "Add your description here"
+description = "use case from bee2link for technical interview"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [

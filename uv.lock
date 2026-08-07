@@ -53,7 +53,7 @@ wheels = [
 ]
 
 [[package]]
-name = "candidat"
+name = "bee2link-use-case"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
