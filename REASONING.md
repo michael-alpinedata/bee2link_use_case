@@ -61,3 +61,15 @@ L'exploration des données brutes a permis d'isoler plusieurs cas particuliers i
 * **Statuts** :
 * Nova : `1`=UNCO, `6`=PREN, `5`=PHEN, `7..13`=PREP, `2`=SAST, `3`=DELI, `4`=EXIT.
 * Legacy : Mappage des codes `10x`, `20x`, `30x` vers le dictionnaire canonique (`UNCO`, `PREN`, `PHEN`, `PREP`, `SAST`, `DELI`, `EXIT`).
+
+
+## 3. Reconstruction Métier du Core Temporel (`int_stock__periods`)
+
+Le Core réconcilie Nova et Legacy sous un modèle temporel unifié : **1 ligne par véhicule × période de statut**.
+
+### Alignement des Périodes :
+1. **Nova** : Utilisation d'une fonction fenêtre `LEAD(status_date)` groupée par `stock_vehicle_id` et triée par `status_date ASC, event_seq ASC`. La date de fin d'un statut correspond à la date de début du statut suivant.
+2. **Legacy** : Chaque véhicule du snapshot est modélisé par une période allant de `entry_stock_date` à `exit_stock_date` (NULL si le véhicule est présent).
+3. **Périmètres de Stock** :
+   - `is_in_stock = TRUE` si le statut appartient à `('PHEN', 'PREP', 'SAST', 'DELI')`.
+   - `is_in_stock_excl_delivery = TRUE` si le statut appartient à `('PHEN', 'PREP', 'SAST')`.
