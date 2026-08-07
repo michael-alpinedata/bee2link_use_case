@@ -49,20 +49,20 @@ current_stock as (
         canonical_status,
         entry_stock_date,
         listing_price,
-        date_diff('day', entry_stock_date, DATE '2026-08-01') as age_in_days,
+        date_diff('day', entry_stock_date, cast('{{ var('target_date') }}' as date)) as age_in_days,
         
         case 
-            when date_diff('day', entry_stock_date, DATE '2026-08-01') <= 30  then '0-30'
-            when date_diff('day', entry_stock_date, DATE '2026-08-01') <= 60  then '31-60'
-            when date_diff('day', entry_stock_date, DATE '2026-08-01') <= 90  then '61-90'
-            when date_diff('day', entry_stock_date, DATE '2026-08-01') <= 180 then '91-180'
-            when date_diff('day', entry_stock_date, DATE '2026-08-01') <= 365 then '181-365'
+            when date_diff('day', entry_stock_date, cast('{{ var('target_date') }}' as date)) <= 30  then '0-30'
+            when date_diff('day', entry_stock_date, cast('{{ var('target_date') }}' as date)) <= 60  then '31-60'
+            when date_diff('day', entry_stock_date, cast('{{ var('target_date') }}' as date)) <= 90  then '61-90'
+            when date_diff('day', entry_stock_date, cast('{{ var('target_date') }}' as date)) <= 180 then '91-180'
+            when date_diff('day', entry_stock_date, cast('{{ var('target_date') }}' as date)) <= 365 then '181-365'
             else '>365'
         end as age_bracket
     from core_periods
     where is_in_stock = true
-      and period_start_date <= DATE '2026-08-01'
-      and (period_end_date > DATE '2026-08-01' or period_end_date is null)
+      and period_start_date <= cast('{{ var('target_date') }}' as date)
+      and (period_end_date > cast('{{ var('target_date') }}' as date) or period_end_date is null)
 )
 
 select

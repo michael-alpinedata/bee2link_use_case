@@ -27,7 +27,7 @@ select
     period_end_date,
     
     -- Durée dans le statut (si période en cours, calcul jusqu'au 2026-08-01)
-    date_diff('day', period_start_date, coalesce(period_end_date, DATE '2026-08-01')) as days_in_status,
+    date_diff('day', period_start_date, coalesce(period_end_date, cast('{{ var('target_date') }}' as date))) as days_in_status,
     
     -- Flags métiers
     is_current_period,
