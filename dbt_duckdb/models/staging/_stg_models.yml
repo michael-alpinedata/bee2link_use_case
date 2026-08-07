@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_nova__vehicles
+    columns:
+      - name: stock_vehicle_id
+        tests:
+          - unique
+          - not_null
+      - name: configuration_code
+        tests:
+          - accepted_values:
+              values: ['VN', 'VD', 'VO']
+
+  - name: stg_nova__status_events
+    columns:
+      - name: stock_vehicle_id
+        tests:
+          - not_null
+      - name: canonical_status
+        tests:
+          - accepted_values:
+              values: ['UNCO', 'PREN', 'PHEN', 'PREP', 'SAST', 'DELI', 'EXIT']
+
+  - name: stg_legacy__parc
+    columns:
+      - name: stock_vehicle_id
+        tests:
+          - unique
+          - not_null
+      - name: canonical_status
+        tests:
+          - accepted_values:
+              values: ['UNCO', 'PREN', 'PHEN', 'PREP', 'SAST', 'DELI', 'EXIT', 'UNKNOWN']
