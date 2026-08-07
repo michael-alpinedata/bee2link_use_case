@@ -1,0 +1,91 @@
+version: 2
+
+models:
+  - name: fct_stock_courant_nord
+    description: >
+      Mart métier fournissant l'inventaire du stock Nord au 2026-08-01.
+      Grain : une ligne par véhicule en stock (is_in_stock = true, ce qui inclut PHEN, PREP, SAST et DELI ;
+      is_in_stock_excl_delivery permet de retirer DELI côté consommateur si besoin).
+    columns:
+      - name: stock_vehicle_id
+        description: "Clé du véhicule. Unique sur ce mart car le grain est 1 ligne par véhicule en stock à la date de référence."
+        tests:
+          - not_null
+          - unique
+      - name: source_system
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['nova', 'legacy']
+      - name: tenant_id
+        description: "Tenant de la concession Nord."
+        tests:
+          - not_null
+      - name: make
+        description: "Marque du véhicule."
+      - name: model
+        description: "Modèle commercial."
+      - name: configuration_code
+        description: "Catégorie commerciale (VN: Véhicule Neuf, VO: Véhicule d'Occasion, VD: Véhicule Démo)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['VN', 'VD', 'VO']
+      - name: days_in_stock
+        description: "Nombre de jours écoulés depuis entry_stock_date, calculé au 2026-08-01."
+      - name: is_over_365_days
+        description: "Flag booléen vrai si days_in_stock > 365."
+        tests:
+          - not_null
+
+  - name: fct_stock_historique_constructeur
+    description: >
+      Mart d'historique anonymisé (sans VIN, plaque ni prix) pour le réseau Sud, livré au constructeur.
+      Grain : une ligne par véhicule x période de statut, véhicules sortis inclus. stock_vehicle_id n'est
+      PAS unique sur ce mart : un véhicule Nova a autant de lignes que de périodes de statut traversées.
+      Permet les requêtes point-in-time via period_start_date / period_end_date, voir requête documentée
+      dans REASONING.md.
+    columns:
+      - name: stock_vehicle_id
+        description: "Clé anonymisée du véhicule (pas de VIN/plaque dans ce mart)."
+        tests:
+          - not_null
+      - name: reseau
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['sud']
+      - name: canonical_status
+        description: "Statut canonique actif durant la période."
+        tests:
+          - not_null
+      - name: period_start_date
+        tests:
+          - not_null
+      - name: period_end_date
+        description: "NULL si la période est toujours en cours : pas de test not_null."
+
+  - name: fct_pilotage_destockage
+    description: >
+      Mart de pilotage du déstockage, tous réseaux. Grain : une ligne par véhicule actuellement en stock
+      au 2026-08-01, enrichie de la durée moyenne de rotation de son groupe de comparaison
+      (configuration_code x make, avec repli sur configuration_code seule si historique insuffisant).
+    columns:
+      - name: stock_vehicle_id
+        description: "Clé du véhicule. Unique sur ce mart car le grain est 1 ligne par véhicule en stock."
+        tests:
+          - not_null
+          - unique
+      - name: configuration_code
+        description: "Catégorie de véhicule (VN, VO, VD). Non unique : plusieurs véhicules partagent la même catégorie, le grain de ce mart est le véhicule, pas la catégorie."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['VN', 'VD', 'VO']
+      - name: group_avg_rotation_days
+        description: "Durée moyenne de rotation du groupe de comparaison (jours)."
+      - name: is_overstock_alert
+        description: "Flag booléen vrai si age_in_days > 1.5 x group_avg_rotation_days."
+        tests:
+          - not_null

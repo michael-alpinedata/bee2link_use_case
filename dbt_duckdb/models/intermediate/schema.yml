@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: int_stock__periods
+    description: >
+      Modèle temporel unifié fusionnant les timelines de présence en stock issues de Nova (événements)
+      et de Legacy (snapshot courant). Grain : une ligne par véhicule x période de statut continue.
+      period_end_date est NULL tant que la période est en cours (véhicule toujours dans ce statut).
+    columns:
+      - name: stock_vehicle_id
+        description: "Clé composite (md5 de source_system||tenant_id||raw_vehicle_id). Non unique sur ce modèle : un même véhicule a une ligne par période de statut."
+        tests:
+          - not_null
+      - name: tenant_id
+        description: "Tenant de rattachement du véhicule."
+        tests:
+          - not_null
+      - name: source_system
+        description: "Système d'origine de la ligne ('nova' ou 'legacy')."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['nova', 'legacy']
+      - name: canonical_status
+        description: "Statut canonique actif durant la période."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['UNCO', 'PREN', 'PHEN', 'PREP', 'SAST', 'DELI', 'EXIT', 'UNKNOWN']
+      - name: period_start_date
+        description: "Date de début de la période de statut."
+        tests:
+          - not_null
+      - name: period_end_date
+        description: "Date de fin de la période de statut. NULL si la période est toujours en cours (pas de test not_null : la nullité est un état valide)."
+      - name: is_current_period
+        description: "Flag booléen indiquant si la période est le statut courant au moment du run."
+        tests:
+          - not_null

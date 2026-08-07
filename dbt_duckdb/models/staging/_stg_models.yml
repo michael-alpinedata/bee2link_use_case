@@ -2,33 +2,54 @@ version: 2
 
 models:
   - name: stg_nova__vehicles
+    description: "Table de staging nettoyée et typée des véhicules de la plateforme Nova."
     columns:
       - name: stock_vehicle_id
+        description: "Clé surrogate unique (MD5) construite via source, tenant_id et vehicle_id."
         tests:
           - unique
           - not_null
       - name: configuration_code
+        description: "Code de configuration standardisé (VN, VD, VO)."
         tests:
           - accepted_values:
-              values: ['VN', 'VD', 'VO']
+              arguments:
+                values: ['VN', 'VD', 'VO']
 
   - name: stg_nova__status_events
+    description: "Table de staging retraçant les événements de statut Nova."
     columns:
       - name: stock_vehicle_id
+        description: "Clé surrogate unique (MD5)."
         tests:
           - not_null
       - name: canonical_status
+        description: "Statut canonique aligné."
         tests:
           - accepted_values:
-              values: ['UNCO', 'PREN', 'PHEN', 'PREP', 'SAST', 'DELI', 'EXIT']
+              arguments:
+                values: ['UNCO', 'PREN', 'PHEN', 'PREP', 'SAST', 'DELI', 'EXIT']
+
+  - name: stg_nova__points_of_sale
+    description: "Table de staging des points de vente Nova."
 
   - name: stg_legacy__parc
+    description: "Table de staging du parc de véhicules du DMS Legacy."
     columns:
       - name: stock_vehicle_id
+        description: "Clé surrogate unique (MD5)."
         tests:
           - unique
           - not_null
       - name: canonical_status
+        description: "Statut canonique mappé à partir des statuts Legacy."
         tests:
           - accepted_values:
-              values: ['UNCO', 'PREN', 'PHEN', 'PREP', 'SAST', 'DELI', 'EXIT', 'UNKNOWN']
+              arguments:
+                values: ['UNCO', 'PREN', 'PHEN', 'PREP', 'SAST', 'DELI', 'EXIT', 'UNKNOWN']
+
+  - name: stg_legacy__concessions
+    description: "Table de staging des concessions du DMS Legacy."
+
+  - name: stg_ref__reseaux
+    description: "Table de staging des réseaux partagés."
